@@ -4,7 +4,7 @@ import (
 	"net"
 	"sync"
 
-	coap "github.com/dustin/go-coap"
+	coap "github.com/littletwolee/go-coap"
 )
 
 var (
@@ -61,9 +61,9 @@ func NewRouter() *Router {
 
 // Match matches the incoming message against all routes. The first matching route
 // wins.
-func (r *Router) Match(msg *coap.Message, addr *net.UDPAddr, match *RouteMatch) bool {
+func (r *Router) Match(msg *coap.Message, match *RouteMatch) bool {
 	for _, route := range r.routes {
-		if route.Match(msg, addr, match) {
+		if route.Match(msg, match) {
 			return true
 		}
 	}
@@ -89,16 +89,16 @@ func (r *Router) Path(tpl string) *Route {
 }
 
 // This method implements the interface for coap.Handler
-func (r *Router) ServeCOAP(l *net.UDPConn, a *net.UDPAddr, m *coap.Message) *coap.Message {
+func (r *Router) ServeCOAP(l *net.TCPConn, m *coap.Message) *coap.Message {
 	match := &RouteMatch{}
 	var returnMessage *coap.Message
-	if r.Match(m, a, match) {
+	if r.Match(m, match) {
 		// TODO set vars
 		setVars(m, match.Vars)
-		returnMessage = match.Handler.ServeCOAP(l, a, m)
+		returnMessage = match.Handler.ServeCOAP(l, m)
 		clearVars(m)
 	} else {
-		returnMessage = r.NotFoundHandler.ServeCOAP(l, a, m)
+		returnMessage = r.NotFoundHandler.ServeCOAP(l, m)
 	}
 	return returnMessage
 }

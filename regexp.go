@@ -3,12 +3,12 @@ package mux
 import (
 	"bytes"
 	"fmt"
-	"net"
+	//	"net"
 	"regexp"
 	"strconv"
 	"strings"
 
-	coap "github.com/dustin/go-coap"
+	coap "github.com/littletwolee/go-coap"
 )
 
 func braceIndices(s string) ([]int, error) {
@@ -143,7 +143,7 @@ func newRouteRegexp(tpl string) (*routeRegexp, error) {
 }
 
 // Match matches the regexp against the URL host or path.
-func (r *routeRegexp) Match(msg *coap.Message, addr *net.UDPAddr) bool {
+func (r *routeRegexp) Match(msg *coap.Message) bool {
 	return r.regexp.MatchString(msg.PathString())
 }
 

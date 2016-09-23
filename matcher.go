@@ -2,16 +2,16 @@ package mux
 
 import (
 	"fmt"
-	"net"
+	//	"net"
 	"strings"
 
-	coap "github.com/dustin/go-coap"
+	coap "github.com/littletwolee/go-coap"
 )
 
 // methodMatcher matches the request against HTTP methods.
 type methodMatcher []coap.COAPCode
 
-func (m methodMatcher) Match(msg *coap.Message, addr *net.UDPAddr) bool {
+func (m methodMatcher) Match(msg *coap.Message) bool {
 	for _, v := range m {
 		if v == msg.Code {
 			return true
@@ -22,7 +22,7 @@ func (m methodMatcher) Match(msg *coap.Message, addr *net.UDPAddr) bool {
 
 type coaptypeMatcher []coap.COAPType
 
-func (m coaptypeMatcher) Match(msg *coap.Message, addr *net.UDPAddr) bool {
+func (m coaptypeMatcher) Match(msg *coap.Message) bool {
 	for _, v := range m {
 		if v == msg.Type {
 			return true

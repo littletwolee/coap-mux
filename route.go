@@ -1,9 +1,9 @@
 package mux
 
 import (
-	"net"
+	//	"net"
 
-	coap "github.com/dustin/go-coap"
+	coap "github.com/littletwolee/go-coap"
 )
 
 type RouteMatch struct {
@@ -14,7 +14,7 @@ type RouteMatch struct {
 // Matcher is the interface to implement if you want to match additional
 // properties
 type Matcher interface {
-	Match(*coap.Message, *net.UDPAddr) bool
+	Match(*coap.Message) bool
 }
 
 // Route represents a set of Matchers which all have to match for a handler to
@@ -42,9 +42,9 @@ func (r *Route) Name(name string) *Route {
 
 // Match matches this route against the received packet and the peers UDPAddr.
 // All matchers have to return true to, for the route to be matched.
-func (r *Route) Match(msg *coap.Message, addr *net.UDPAddr, match *RouteMatch) bool {
+func (r *Route) Match(msg *coap.Message, match *RouteMatch) bool {
 	for _, matcher := range r.matchers {
-		if matched := matcher.Match(msg, addr); !matched {
+		if matched := matcher.Match(msg); !matched {
 			return false
 		}
 	}
